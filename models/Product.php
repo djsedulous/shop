@@ -17,6 +17,8 @@ use Yii;
  * @property Category[] $categories
  * @property OrderList[] $orderLists
  * @property Order[] $orders
+ * @property ProductImage[] $productImages
+ * @property Image[] $images
  * @property ProductStock[] $productStocks
  * @property Stock[] $stocks
  */
@@ -36,7 +38,7 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'guarantee'], 'required'],
+            [['name'], 'required'],
             [['price'], 'number'],
             [['guarantee', 'available'], 'integer'],
             [['name'], 'string', 'max' => 45]
@@ -103,6 +105,22 @@ class Product extends \yii\db\ActiveRecord
     public function getStocks()
     {
         return $this->hasMany(Stock::className(), ['id' => 'stock_id'])->viaTable('product_stock', ['product_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProductImages()
+    {
+        return $this->hasMany(ProductImage::className(), ['product_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImages()
+    {
+        return $this->hasMany(Image::className(), ['id' => 'image_id'])->viaTable('product_image', ['product_id' => 'id']);
     }
 
     public function addToStock($stockId, $count = 0)
