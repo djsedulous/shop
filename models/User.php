@@ -14,6 +14,8 @@ use Yii;
  * @property string $phone
  * @property string $email
  * @property string $password
+ * @property string $access_token
+ * @property string $auth_key
  *
  * @property Order[] $orders
  * @property Order[] $orders0

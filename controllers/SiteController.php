@@ -2,12 +2,19 @@
 
 namespace app\controllers;
 
+use app\models\MultiUploadForm;
+use app\models\RegistrationForm;
+use app\models\UploadForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\web\Response;
+use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
 
 class SiteController extends Controller
 {
@@ -90,5 +97,61 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionReg()
+    {
+        $model = new RegistrationForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+        }
+
+        if (Yii::$app->request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        } elseif (Yii::$app->request->isPost) {
+            $user = new User();
+            $user->attributes = $model->attributes;
+
+            $user->password = md5($user->password);
+            $user->auth_key = md5(time());
+
+            $user->save();
+        }
+
+        return $this->render('registration', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionUpload()
+    {
+        $model = new UploadForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
+    }
+
+    public function actionMultiUpload()
+    {
+        $model = new MultiUploadForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('multi_upload', ['model' => $model]);
     }
 }
