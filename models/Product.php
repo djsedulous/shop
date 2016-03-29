@@ -140,4 +140,15 @@ class Product extends \yii\db\ActiveRecord
 
         return false;
     }
+
+    public function getMainImage()
+    {
+        foreach ($this->productImages as $image) {
+            if ($image->is_main) {
+                return $image->image->name;
+            }
+        }
+
+        return false;
+    }
 }

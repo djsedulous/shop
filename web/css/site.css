@@ -89,3 +89,17 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+.no-padding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.no-padding-right {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+.img-thumbnail:not(:last-child) {
+    margin-right: 2px;
+}
